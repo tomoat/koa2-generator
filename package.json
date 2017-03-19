@@ -1,0 +1,55 @@
+{
+  "name": "koa2-generator",
+  "version": "1.0.0",
+  "description": "Koa2' application generator",
+  "author": "tomoat",
+  "contributors": [],
+  "main": "bin/koa2",
+  "preferGlobal": true,
+  "bin": {
+    "koa2": "./bin/koa2"
+  },
+  "scripts": {
+    "test": "mocha --reporter spec --bail --check-leaks test/",
+    "test-ci": "mocha --reporter spec --check-leaks test/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tomoat/koa2-generator.git"
+  },
+  "keywords": [
+    "koa2",
+    "framework",
+    "web",
+    "rest",
+    "restful",
+    "app",
+    "api"
+  ],
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tomoat/koa2-generator/issues"
+  },
+  "homepage": "https://github.com/tomoat/koa2-generator#readme",
+  "dependencies": {
+    "commander": "^2.9.0",
+    "mkdirp": "^0.5.1",
+    "sorted-object": "^2.0.1"
+  },
+  "devDependencies": {
+    "babel-eslint": "^7.1.1",
+    "eslint": "^3.18.0",
+    "mocha": "^3.2.0",
+    "rimraf": "^2.6.1",
+    "supertest": "^3.0.0",
+    "validate-npm-package-name": "^3.0.0"
+  },
+  "engines": {
+    "node": ">=7.6.0"
+  },
+  "files": [
+    "LICENSE",
+    "bin/",
+    "templates/"
+  ]
+}
