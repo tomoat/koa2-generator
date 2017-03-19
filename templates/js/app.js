@@ -1,7 +1,8 @@
 const Koa = require('koa')
+const Router = require('koa-router')
 const app = new Koa()
+const router = new Router()
 
-const router = require('koa-router')
 const views = require('koa-views')
 const co = require('co')
 const convert = require('koa-convert')
@@ -10,6 +11,7 @@ const onerror = require('koa-onerror')
 const bodyparser = require('koa-bodyparser')
 const logger = require('koa-logger')
 const debug = require('debug')('koa2:server')
+const path = require('path')
 
 const config = require('./config')
 const index = require('./routes/index')
@@ -25,17 +27,13 @@ app.use(bodyparser())
   .use(json())
   .use(logger())
   .use(require('koa-static')(__dirname + '/public'))
-  .use(views(__dirname + '/views', {
+  .use(views(path.join(__dirname, '/views'), {
+    options: {settings: {views: path.join(__dirname, 'views')}},
+    map: {'{views}': '{engine}'},
     extension: '{views}'
   }))
   .use(router.routes())
   .use(router.allowedMethods())
-
-// if you use nunjucks template engine please require nunjucks and uncomment on the following code
-/*const nunjucks = require('nunjucks')
-nunjucks.configure(path.join(__dirname, 'views'), {
-  autoescape: true,
-});*/
 
 // logger
 app.use(async (ctx, next) => {
@@ -45,11 +43,13 @@ app.use(async (ctx, next) => {
   console.log(`${ctx.method} ${ctx.url} - ${ms}ms`)
 })
 
-router.use('/', index.routes(), index.allowedMethods())
-router.use('/users', users.routes(), users.allowedMethods())
-
-app.use(router.routes(), router.allowedMethods())
-// response
+router.get('/', async (ctx, next) => {
+  // ctx.body = 'Hello World'
+  ctx.state = {
+    title: 'Koa2'
+  }
+  await ctx.render('index', ctx.state)
+})
 
 app.on('error', function(err, ctx) {
   console.log(err)
@@ -57,5 +57,3 @@ app.on('error', function(err, ctx) {
 })
 
 app.listen(config.port, () => debug(`Listening on http://localhost:${config.port}`))
-
-export default app
