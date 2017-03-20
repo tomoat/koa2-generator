@@ -20,8 +20,10 @@ The quickest way to get started with koa2 is to utilize the executable `koa2(1)`
 
 Create the app:
 
+if you use hogan template engine
+
 ```bash
-$ koa2 --view=hjs ./app && cd ./app
+$ koa2 --view hogan ./app && cd ./app
 ```
 
 if you want use yarn manage your application modules
@@ -60,7 +62,7 @@ Usage: koa2 [options] [dir]
         --pug           add pug engine support
         --hjs           add hogan.js engine support
         --njk           add nunjucks engine support
-        --view <engine> add view <engine> support (ejs|hbs|hjs|jade|pug|twig|vash) (defaults to jade)
+        --view <engine> add view <engine> support (ejs|hbs|hogan|jade|pug|twig|vash) (defaults to jade)
     -c, --css <engine>  add stylesheet <engine> support (less|stylus|compass|sass) (defaults to plain css)
         --git           add .gitignore
     -f, --force         force on non-empty directory
