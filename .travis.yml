@@ -1,0 +1,19 @@
+language: node_js
+node_js:
+  - '7'
+
+cache:
+  apt: true
+  directories:
+    - node_modules
+    - bower_components
+    - '$HOME/.npm'
+    - ~/.yarn
+    - ~/.yarn-cache
+before_install:
+  - npm install -g yarn
+
+install:
+  - npm prune
+  - yarn install
+
