@@ -2,13 +2,21 @@ environment:
   matrix:
     - nodejs_version: "7.6"
     - nodejs_version: "7.7"
+branches:
+  only:
+  - master
+  # - /v[0-9]+(\.0-9]+)*/
 cache:
   - node_modules
+  - "%LOCALAPPDATA%/Yarn"
 install:
   - ps: Install-Product node $env:nodejs_version
   - if exist node_modules npm prune
   - if exist node_modules npm rebuild
-  - npm install
+  # - npm install
+  - choco install yarn
+  - refreshenv
+  - yarn install
 build: off
 test_script:
   - node --version

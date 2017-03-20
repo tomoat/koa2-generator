@@ -1,6 +1,6 @@
 {
   "name": "koa2-generator",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Koa2' application generator",
   "author": "tomoat",
   "contributors": [],
@@ -37,6 +37,7 @@
     "sorted-object": "^2.0.1"
   },
   "devDependencies": {
+    "ava": "^0.18.2",
     "babel-eslint": "^7.1.1",
     "eslint": "^3.18.0",
     "mocha": "^3.2.0",

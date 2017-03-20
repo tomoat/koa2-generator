@@ -237,7 +237,6 @@ function createApplication(app_name, path) {
 
     // Template support
     // engine => extension
-    console.log(program)
     const templates = {'hogan': 'hjs', 'ejs': 'ejs', 'jade': 'jade', 'pug': 'pug', 'nunjucks': 'njk', 'hbs': 'hbs', 'twig': 'twig', 'vash': 'vash'}
     app.locals.engine = program.view
     app.locals.views = templates[program.view]

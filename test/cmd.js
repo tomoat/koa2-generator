@@ -1,30 +1,32 @@
 
-var assert = require('assert');
-var exec = require('child_process').exec;
-var fs = require('fs');
-var mkdirp = require('mkdirp');
-var path = require('path');
-var request = require('supertest');
-var rimraf = require('rimraf');
-var spawn = require('child_process').spawn;
-var validateNpmName = require('validate-npm-package-name')
+const assert = require('assert');
+const exec = require('child_process').exec;
+const fs = require('fs');
+const mkdirp = require('mkdirp');
+const path = require('path');
+const request = require('supertest');
+const rimraf = require('rimraf');
+const spawn = require('child_process').spawn;
+const validateNpmName = require('validate-npm-package-name')
 
-var binPath = path.resolve(__dirname, '../bin/koa2');
-var TEMP_DIR = path.resolve(__dirname, '..', 'temp', String(process.pid + Math.random()))
+const binPath = path.resolve(__dirname, '../bin/koa2');
+// const TEMP_DIR = path.resolve(__dirname, '..', 'temp', String(process.pid + Math.random()))
+const TEMP_DIR = path.resolve(__dirname, '..', 'temp')
 
-describe('koa2(1)', function () {
+describe('koa2', function () {
   before(function (done) {
     this.timeout(30000);
     cleanup(done);
   });
 
-  after(function (done) {
+  /*after(function (done) {
     this.timeout(30000);
     cleanup(done);
-  });
+  });*/
 
   describe('(no args)', function () {
-    var ctx = setupTestEnvironment(this.fullTitle())
+    console.log(this.fullTitle())
+    const ctx = setupTestEnvironment(this.fullTitle())
 
     it('should create basic app', function (done) {
       runRaw(ctx.dir, [], function (err, code, stdout, stderr) {
@@ -32,72 +34,75 @@ describe('koa2(1)', function () {
         ctx.files = parseCreatedFiles(stdout, ctx.dir)
         ctx.stderr = stderr
         ctx.stdout = stdout
-        assert.equal(ctx.files.length, 17)
+        assert.equal(ctx.files.length, 24)
         done();
       });
     });
 
-    it('should print jade view warning', function () {
-      assert.equal(ctx.stderr, "\n  warning: the default view engine will not be jade in future releases\n  warning: use `--view=jade' or `--help' for additional options\n\n")
-    })
-
     it('should provide debug instructions', function () {
-      assert.ok(/DEBUG=koa2\(1\)-\(no-args\):\* (?:\& )?npm start/.test(ctx.stdout))
+      assert.ok(/DEBUG=koa2\-\(no-args\):\* (?:\& )?npm start/.test(ctx.stdout))
     });
 
     it('should have basic files', function () {
-      assert.notEqual(ctx.files.indexOf('bin/www'), -1)
       assert.notEqual(ctx.files.indexOf('app.js'), -1)
       assert.notEqual(ctx.files.indexOf('package.json'), -1)
+      assert.notEqual(ctx.files.indexOf('routes/index.js'), -1)
     });
 
-    it('should have jade templates', function () {
-      assert.notEqual(ctx.files.indexOf('views/error.jade'), -1)
-      assert.notEqual(ctx.files.indexOf('views/index.jade'), -1)
-      assert.notEqual(ctx.files.indexOf('views/layout.jade'), -1)
+    it('should have nunjucks templates', function () {
+      assert.notEqual(ctx.files.indexOf('views/error.njk'), -1)
+      assert.notEqual(ctx.files.indexOf('views/index.njk'), -1)
+      assert.notEqual(ctx.files.indexOf('views/layout.njk'), -1)
     });
 
     it('should have a package.json file', function () {
-      var file = path.resolve(ctx.dir, 'package.json');
-      var contents = fs.readFileSync(file, 'utf8');
+      const file = path.resolve(ctx.dir, 'package.json');
+      const contents = fs.readFileSync(file, 'utf8');
       assert.equal(contents, '{\n'
-        + '  "name": "koa2(1)-(no-args)",\n'
-        + '  "version": "0.0.0",\n'
+        + '  "name": "koa2-(no-args)",\n'
+        + '  "version": "0.1.0",\n'
         + '  "private": true,\n'
         + '  "scripts": {\n'
-        + '    "start": "node ./bin/www"\n'
+        + '    "start": "node app.js"\n'
         + '  },\n'
         + '  "dependencies": {\n'
-        + '    "body-parser": "~1.16.0",\n'
-        + '    "cookie-parser": "~1.4.3",\n'
-        + '    "debug": "~2.6.0",\n'
-        + '    "koa2": "~2.2.0",\n'
-        + '    "jade": "~1.11.0",\n'
-        + '    "morgan": "~1.8.0",\n'
-        + '    "serve-favicon": "~2.3.2"\n'
+        + '    "debug": "~2.6.3",\n'
+        + '    "koa": "^2.2.0",\n'
+        + '    "koa-bodyparser": "^4.1.0",\n'
+        + '    "koa-convert": "^1.2.0",\n'
+        + '    "koa-json": "^2.0.2",\n'
+        + '    "koa-logger": "^2.0.1",\n'
+        + '    "koa-onerror": "^3.1.0",\n'
+        + '    "koa-router": "^7.0.0",\n'
+        + '    "koa-static": "^3.0.0",\n'
+        + '    "koa-views": "^6.0.1",\n'
+        + '    "nunjucks": "~3.0.0"\n'
+        + '  },\n'
+        + '  "devDependencies": {\n'
+        + '    "babel-eslint": "7.1.1",\n'
+        + '    "eslint": "3.18.0"\n'
         + '  }\n'
         + '}\n');
     });
 
     it('should have installable dependencies', function (done) {
-      this.timeout(30000);
+      this.timeout(50000);
       npmInstall(ctx.dir, done);
     });
 
     it('should export an koa2 app from app.js', function () {
-      var file = path.resolve(ctx.dir, 'app.js');
-      var app = require(file);
-      assert.equal(typeof app, 'function');
-      assert.equal(typeof app.handle, 'function');
+      const file = path.resolve(ctx.dir, 'app.js');
+      const app = require(file);
+      assert.equal(typeof app, 'object');
     });
 
     it('should respond to HTTP request', function (done) {
-      var file = path.resolve(ctx.dir, 'app.js');
-      var app = require(file);
+      const file = path.resolve(ctx.dir, 'app.js');
+      const app = require(file);
 
       request(app)
       .get('/')
-      .expect(200, /<title>koa2<\/title>/, done);
+      .expect(200, /<title>Koa2<\/title>/, done);
     });
 
     it('should generate a 404', function (done) {
@@ -106,7 +111,7 @@ describe('koa2(1)', function () {
 
       request(app)
       .get('/does_not_exist')
-      .expect(404, /<h1>Not Found<\/h1>/, done);
+      .expect(404, /Not\ Found/, done);
     });
 
     describe('when directory contains spaces', function () {
@@ -115,7 +120,7 @@ describe('koa2(1)', function () {
       it('should create basic app', function (done) {
         run(ctx.dir, [], function (err, output) {
           if (err) return done(err)
-          assert.equal(parseCreatedFiles(output, ctx.dir).length, 17)
+          assert.equal(parseCreatedFiles(output, ctx.dir).length, 24)
           done()
         })
       })
@@ -135,7 +140,7 @@ describe('koa2(1)', function () {
       it('should create basic app', function (done) {
         run(ctx.dir, [], function (err, output) {
           if (err) return done(err)
-          assert.equal(parseCreatedFiles(output, ctx.dir).length, 17)
+          assert.equal(parseCreatedFiles(output, ctx.dir).length, 24)
           done()
         })
       })
@@ -219,7 +224,7 @@ describe('koa2(1)', function () {
         run(ctx.dir, ['--css', 'less'], function (err, stdout) {
           if (err) return done(err);
           ctx.files = parseCreatedFiles(stdout, ctx.dir)
-          assert.equal(ctx.files.length, 17, 'should have 17 files')
+          assert.equal(ctx.files.length, 24, 'should have 24 files')
           done();
         });
       });
@@ -242,8 +247,7 @@ describe('koa2(1)', function () {
       it('should export an koa2 app from app.js', function () {
         var file = path.resolve(ctx.dir, 'app.js');
         var app = require(file);
-        assert.equal(typeof app, 'function');
-        assert.equal(typeof app.handle, 'function');
+        assert.equal(typeof app, 'object');
       });
 
       it('should respond to HTTP request', function (done) {
@@ -272,7 +276,7 @@ describe('koa2(1)', function () {
         run(ctx.dir, ['--css', 'stylus'], function (err, stdout) {
           if (err) return done(err);
           ctx.files = parseCreatedFiles(stdout, ctx.dir)
-          assert.equal(ctx.files.length, 17, 'should have 17 files')
+          assert.equal(ctx.files.length, 24, 'should have 24 files')
           done();
         });
       });
@@ -295,8 +299,7 @@ describe('koa2(1)', function () {
       it('should export an koa2 app from app.js', function () {
         var file = path.resolve(ctx.dir, 'app.js');
         var app = require(file);
-        assert.equal(typeof app, 'function');
-        assert.equal(typeof app.handle, 'function');
+        assert.equal(typeof app, 'object');
       });
 
       it('should respond to HTTP request', function (done) {
@@ -395,7 +398,7 @@ describe('koa2(1)', function () {
       run(ctx.dir, ['--hbs'], function (err, stdout) {
         if (err) return done(err);
         ctx.files = parseCreatedFiles(stdout, ctx.dir);
-        assert.equal(ctx.files.length, 17);
+        assert.equal(ctx.files.length, 24);
         done();
       });
     });
@@ -474,7 +477,7 @@ describe('koa2(1)', function () {
       run(ctx.dir, ['--pug'], function (err, stdout) {
         if (err) return done(err)
         ctx.files = parseCreatedFiles(stdout, ctx.dir)
-        assert.equal(ctx.files.length, 17)
+        assert.equal(ctx.files.length, 24)
         done()
       })
     })
@@ -561,8 +564,7 @@ describe('koa2(1)', function () {
       it('should export an koa2 app from app.js', function () {
         var file = path.resolve(ctx.dir, 'app.js')
         var app = require(file)
-        assert.equal(typeof app, 'function')
-        assert.equal(typeof app.handle, 'function')
+        assert.equal(typeof app, 'object')
       })
 
       it('should respond to HTTP request', function (done) {
@@ -591,7 +593,7 @@ describe('koa2(1)', function () {
         run(ctx.dir, ['--view', 'hbs'], function (err, stdout) {
           if (err) return done(err)
           ctx.files = parseCreatedFiles(stdout, ctx.dir)
-          assert.equal(ctx.files.length, 17)
+          assert.equal(ctx.files.length, 24)
           done()
         })
       })
@@ -623,8 +625,7 @@ describe('koa2(1)', function () {
       it('should export an koa2 app from app.js', function () {
         var file = path.resolve(ctx.dir, 'app.js')
         var app = require(file)
-        assert.equal(typeof app, 'function')
-        assert.equal(typeof app.handle, 'function')
+        assert.equal(typeof app, 'object')
       })
 
       it('should respond to HTTP request', function (done) {
@@ -684,8 +685,7 @@ describe('koa2(1)', function () {
       it('should export an koa2 app from app.js', function () {
         var file = path.resolve(ctx.dir, 'app.js')
         var app = require(file)
-        assert.equal(typeof app, 'function')
-        assert.equal(typeof app.handle, 'function')
+        assert.equal(typeof app, 'object')
       })
 
       it('should respond to HTTP request', function (done) {
@@ -717,7 +717,7 @@ describe('koa2(1)', function () {
         run(ctx.dir, ['--view', 'pug'], function (err, stdout) {
           if (err) return done(err)
           ctx.files = parseCreatedFiles(stdout, ctx.dir)
-          assert.equal(ctx.files.length, 17)
+          assert.equal(ctx.files.length, 24)
           done()
         })
       })
@@ -749,8 +749,7 @@ describe('koa2(1)', function () {
       it('should export an koa2 app from app.js', function () {
         var file = path.resolve(ctx.dir, 'app.js')
         var app = require(file)
-        assert.equal(typeof app, 'function')
-        assert.equal(typeof app.handle, 'function')
+        assert.equal(typeof app, 'object')
       })
 
       it('should respond to HTTP request', function (done) {
@@ -779,7 +778,7 @@ describe('koa2(1)', function () {
         run(ctx.dir, ['--view', 'twig'], function (err, stdout) {
           if (err) return done(err)
           ctx.files = parseCreatedFiles(stdout, ctx.dir)
-          assert.equal(ctx.files.length, 17)
+          assert.equal(ctx.files.length, 24)
           done()
         })
       })
@@ -811,8 +810,7 @@ describe('koa2(1)', function () {
       it('should export an koa2 app from app.js', function () {
         var file = path.resolve(ctx.dir, 'app.js')
         var app = require(file)
-        assert.equal(typeof app, 'function')
-        assert.equal(typeof app.handle, 'function')
+        assert.equal(typeof app, 'object')
       })
 
       it('should respond to HTTP request', function (done) {
@@ -841,7 +839,7 @@ describe('koa2(1)', function () {
         run(ctx.dir, ['--view', 'vash'], function (err, stdout) {
           if (err) return done(err)
           ctx.files = parseCreatedFiles(stdout, ctx.dir)
-          assert.equal(ctx.files.length, 17)
+          assert.equal(ctx.files.length, 24)
           done()
         })
       })
@@ -873,8 +871,7 @@ describe('koa2(1)', function () {
       it('should export an koa2 app from app.js', function () {
         var file = path.resolve(ctx.dir, 'app.js')
         var app = require(file)
-        assert.equal(typeof app, 'function')
-        assert.equal(typeof app.handle, 'function')
+        assert.equal(typeof app, 'object')
       })
 
       it('should respond to HTTP request', function (done) {
@@ -918,8 +915,7 @@ function npmInstall(dir, callback) {
       env[key] = process.env[key]
     }
   }
-
-  exec('npm install', {cwd: dir, env: env}, function (err, stderr) {
+  exec('yarn install', {cwd: dir, env: env}, function (err, stderr) {
     if (err) {
       err.message += stderr;
       callback(err);
@@ -1006,10 +1002,10 @@ function setupTestEnvironment (name) {
     mkdirp(ctx.dir, done)
   })
 
-  after('cleanup environment', function (done) {
+  /*after('cleanup environment', function (done) {
     this.timeout(30000)
     cleanup(ctx.dir, done)
-  })
+  })*/
 
   return ctx
 }

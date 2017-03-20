@@ -14,8 +14,7 @@ const debug = require('debug')('koa2:server')
 const path = require('path')
 
 const config = require('./config')
-const index = require('./routes/index')
-const users = require('./routes/users')
+const routes = require('./routes')
 
 const port = process.env.PORT || config.port
 
@@ -51,9 +50,12 @@ router.get('/', async (ctx, next) => {
   await ctx.render('index', ctx.state)
 })
 
+routes(router)
 app.on('error', function(err, ctx) {
   console.log(err)
   logger.error('server error', err, ctx)
 })
 
-app.listen(config.port, () => debug(`Listening on http://localhost:${config.port}`))
+module.exports = app.listen(config.port, () => {
+  console.log(`Listening on http://localhost:${config.port}`)
+})
