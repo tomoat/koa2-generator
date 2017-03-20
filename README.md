@@ -7,7 +7,7 @@
 [![Linux Build][travis-image]][travis-url]
 [![Windows Build][appveyor-image]][appveyor-url]
 [![Gratipay][gratipay-image]][gratipay-url]
-
+[![Greenkeeper badge][geenkeeper-image]][geenkeeper-url]
 ## Installation
 
 ```sh
@@ -52,7 +52,7 @@ $ yarn start
 This generator can also be further configured with the following command line flags.
 
 Usage: koa2 [options] [dir]
-  
+
   options:
 
     -h, --help          output usage information
@@ -81,3 +81,5 @@ Usage: koa2 [options] [dir]
 [downloads-url]: https://npmjs.org/package/koa2-generator
 [gratipay-image]: https://img.shields.io/gratipay/tomoat.svg
 [gratipay-url]: https://gratipay.com/tomoat/
+[geenkeeper-image]: https://badges.greenkeeper.io/tomoat/koa2-generator.svg
+[geenkeeper-url]: https://greenkeeper.io/

@@ -11,7 +11,8 @@
   },
   "scripts": {
     "test": "mocha --reporter spec --bail test/cmd.js",
-    "test-ci": "mocha --reporter spec test/cmd.js"
+    "test-ci": "mocha --reporter spec test/cmd.js",
+    "postpublish": "greenkeeper-postpublish"
   },
   "repository": {
     "type": "git",
@@ -40,6 +41,7 @@
     "ava": "^0.18.2",
     "babel-eslint": "^7.1.1",
     "eslint": "^3.18.0",
+    "greenkeeper-postpublish": "^1.0.1",
     "mocha": "^3.2.0",
     "rimraf": "^2.6.1",
     "supertest": "^3.0.0",
