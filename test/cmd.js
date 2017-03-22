@@ -34,7 +34,7 @@ describe('koa2', function () {
         ctx.files = parseCreatedFiles(stdout, ctx.dir)
         ctx.stderr = stderr
         ctx.stdout = stdout
-        assert.equal(ctx.files.length, 24)
+        assert.equal(ctx.files.length, 26)
         done();
       });
     });
@@ -86,7 +86,7 @@ describe('koa2', function () {
     });
 
     it('should have installable dependencies', function (done) {
-      this.timeout(50000);
+      this.timeout(70000);
       npmInstall(ctx.dir, done);
     });
 
@@ -120,7 +120,7 @@ describe('koa2', function () {
       it('should create basic app', function (done) {
         run(ctx.dir, [], function (err, output) {
           if (err) return done(err)
-          assert.equal(parseCreatedFiles(output, ctx.dir).length, 24)
+          assert.equal(parseCreatedFiles(output, ctx.dir).length, 26)
           done()
         })
       })
@@ -140,7 +140,7 @@ describe('koa2', function () {
       it('should create basic app', function (done) {
         run(ctx.dir, [], function (err, output) {
           if (err) return done(err)
-          assert.equal(parseCreatedFiles(output, ctx.dir).length, 24)
+          assert.equal(parseCreatedFiles(output, ctx.dir).length, 26)
           done()
         })
       })
@@ -264,10 +264,10 @@ function setupTestEnvironment (name) {
     mkdirp(ctx.dir, done)
   })
 
-  /*after('cleanup environment', function (done) {
+  after('cleanup environment', function (done) {
     this.timeout(30000)
     cleanup(ctx.dir, done)
-  })*/
+  })
 
   return ctx
 }

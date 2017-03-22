@@ -319,11 +319,14 @@ function createApplication(app_name, path) {
     mkdir(path + '/config', function(){
       // write(path + '/config/index.js', www.render(), 0755)
       copy_template('js/config/index.js', path + '/config/index.js')
-      copy_template('js/.eslintrc.yml', path + '/.eslintrc.yml')
-      copy_template('js/.eslintignore', path + '/.eslintignore')
-      copy_template('js/.editorconfig', path + '/.editorconfig')
       complete()
     })
+
+    copy_template('js/.eslintrc.yml', path + '/.eslintrc.yml')
+    copy_template('js/.eslintignore', path + '/.eslintignore')
+    copy_template('js/.editorconfig', path + '/.editorconfig')
+    copy_template('js/README.md', path + '/README.md')
+    copy_template('js/LICENSE', path + '/LICENSE')
 
     if (program.git) {
       copy_template('js/gitignore', path + '/.gitignore')
