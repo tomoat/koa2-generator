@@ -1,0 +1,18 @@
+machine:
+  node:
+    version: 7
+
+dependencies:
+  pre:
+    - npm install -g yarn
+    - yarn install
+    # - npm install -g grunt-cli
+    # - npm install -g bower
+  override:
+    - yarn
+  cache_directories:
+    - ~/.cache/yarn
+
+general:
+  artifacts:
+    - "./dist"
