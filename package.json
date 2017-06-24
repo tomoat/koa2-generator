@@ -40,7 +40,7 @@
     "ava": "^0.19.0",
     "babel-eslint": "^7.2.0",
     "bluebird": "^3.5.0",
-    "eslint": "^3.18.0",
+    "eslint": "^4.1.0",
     "eslint-plugin-import": "^2.2.0",
     "execa": "^0.6.3",
     "mocha": "^3.2.0",
