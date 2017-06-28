@@ -37,7 +37,7 @@
     "sorted-object": "^2.0.1"
   },
   "devDependencies": {
-    "ava": "^0.19.1",
+    "ava": "^0.20.0",
     "babel-eslint": "^7.2.3",
     "bluebird": "^3.5.0",
     "eslint": "^4.1.1",
