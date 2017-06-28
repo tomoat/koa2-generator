@@ -248,16 +248,16 @@ function createApplication(app_name, path) {
       , private: true
       , scripts: { start: 'node app.js' }
       , dependencies: {
-          'koa': '^2.2.0',
-          'koa-bodyparser': '^4.1.0',
+          'koa': '^2.3.0',
+          'koa-bodyparser': '^4.2.0',
           'koa-convert': '^1.2.0',
-          'debug': '~2.6.3',
+          'debug': '~2.6.8',
           'koa-json': '^2.0.2',
-          'koa-logger': '^2.0.1',
+          'koa-logger': '^3.0.0',
           'koa-onerror': '^3.1.0',
-          'koa-router': '^7.0.0',
+          'koa-router': '^7.2.1',
           'koa-static': '^3.0.0',
-          'koa-views': '^6.0.1'
+          'koa-views': '^6.0.2'
       }
       , devDependencies: {
         'babel-eslint': '7.1.1',
