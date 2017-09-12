@@ -38,7 +38,7 @@
   },
   "devDependencies": {
     "ava": "^0.20.0",
-    "babel-eslint": "^7.2.3",
+    "babel-eslint": "^8.0.0",
     "bluebird": "^3.5.0",
     "eslint": "^4.1.1",
     "eslint-plugin-import": "^2.6.0",
