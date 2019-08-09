@@ -32,7 +32,7 @@
   },
   "homepage": "https://github.com/tomoat/koa2-generator#readme",
   "dependencies": {
-    "commander": "^2.10.0",
+    "commander": "^3.0.0",
     "mkdirp": "^0.5.1",
     "sorted-object": "^2.0.1"
   },
