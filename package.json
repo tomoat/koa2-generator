@@ -44,7 +44,7 @@
     "eslint-plugin-import": "^2.6.0",
     "execa": "^0.7.0",
     "mocha": "^3.4.2",
-    "rimraf": "^2.6.1",
+    "rimraf": "^3.0.0",
     "supertest": "^3.0.0",
     "validate-npm-package-name": "^3.0.0"
   },
